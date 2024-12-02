@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Star, ShoppingCart, CheckCircle, Heart } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import productsData from '../data/productData';
+import { useCart } from '../contexts/CartContext';
 const ProductDetails = () => {
 
   const { id } = useParams();
 
+  const {addCart} = useCart();
+
   useEffect(() => {
-    // Simulate API call or data fetching
     const fetchProductDetails = async () => {
       try {
-        // Simulating network delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         const foundProduct = productsData.find(product => product.id === Number(id));
         
         if (foundProduct) {
-          console.log('Product found:', foundProduct);
           
           setProduct(foundProduct);
         } else {
@@ -159,7 +159,8 @@ const ProductDetails = () => {
 
             <button 
               className="flex-grow flex items-center justify-center bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
-              disabled={!selectedSize || !selectedColor}
+              // disabled={!selectedSize || !selectedColor}
+              onClick={() => addCart({...product, quantity, size: selectedSize, color: selectedColor})}
             >
               <ShoppingCart className="mr-2" />
               Add to Cart

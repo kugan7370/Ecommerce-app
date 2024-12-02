@@ -7,11 +7,12 @@ const ProductCard = ({ product, onAddToCart }) => {
   
     const navigate = useNavigate();
     return (
-      <div className="bg-white rounded-lg shadow-md overflow-hidden transform transition-all hover:scale-105 duration-300"  onClick={() => navigate(`/productDetails/${product.id}`)}> 
+      <div className="bg-white rounded-lg shadow-md overflow-hidden transform transition-all hover:scale-105 duration-300"  > 
         <img 
           src={product.images[0]} 
           alt={product.name} 
           className="w-full h-48 object-contain"
+          onClick={() => navigate(`/productDetails/${product.id}`)}
         />
         <div className="p-4">
           <h3 className="font-bold text-lg mb-2">{product.name}</h3>
@@ -22,7 +23,7 @@ const ProductCard = ({ product, onAddToCart }) => {
            
           </div>
           <button 
-              onClick={() => onAddToCart(product)}
+              onClick={() => onAddToCart({...product, quantity: 1, size: product.size[0] || null, color: product.colors[0] || null})}
               className="bg-blue-500 w-full mt-2 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center"
             >
               <ShoppingCart className="mr-2" size={18} />
