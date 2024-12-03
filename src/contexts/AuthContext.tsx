@@ -1,30 +1,19 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { IAuthContextType, IUser } from '../types/user';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
 
-interface AuthContextType {
-  currentUser: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
-  users: User[];
-}
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+
+const AuthContext = createContext<IAuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [users, setUsers] = useState<User[]>(() => {
+  const [users, setUsers] = useState<IUser[]>(() => {
     const storedUsers = localStorage.getItem('users');
     return storedUsers ? JSON.parse(storedUsers) : [];
   });
 
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+  const [currentUser, setCurrentUser] = useState<IUser | null>(() => {
     const storedCurrentUser = localStorage.getItem('currentUser');
     return storedCurrentUser ? JSON.parse(storedCurrentUser) : null;
   });
@@ -67,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('User already exists');
     }
 
-    const newUser: User = {
+    const newUser: IUser = {
       id: crypto.randomUUID(),
       name,
       email,
@@ -82,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(null);
   };
 
-  const contextValue: AuthContextType = {
+  const contextValue: IAuthContextType = {
     currentUser,
     login,
     register,

@@ -1,9 +1,11 @@
+import { ICartItem } from "./cart";
+
 export interface IProduct {
-    id: number;
+    id: number | string;
     name: string;
-    price: number;
+    price: number|string;
     description: string;
-    images: string[];
+    images: string[] ;
     sizes?: string[];
     colors: { name: string; hex: string }[];
     reviews: { id: number; name: string; rating: number; date: string; comment: string }[];
@@ -14,5 +16,5 @@ export interface IProduct {
   
 export interface IProductCardProps {
     product: IProduct;
-    onAddToCart: (product: Partial<IProduct>) => void;
+    onAddToCart: (item: ICartItem) => void;
   }

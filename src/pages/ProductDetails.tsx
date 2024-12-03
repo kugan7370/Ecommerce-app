@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import productsData from '../data/productData';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { IProduct } from '../types/product';
 const ProductDetails = () => {
   const {isAuthenticated}=useAuth();
 
@@ -12,6 +13,13 @@ const ProductDetails = () => {
   const {addCart} = useCart();
 
   const navigate = useNavigate();
+
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<IProduct>({} as IProduct);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -37,18 +45,9 @@ const ProductDetails = () => {
   }, [id]);
 
 
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+ 
 
 
-  const handleAddToCart = () => { 
-    addCart({...product, quantity, size: selectedSize, color: selectedColor});
-    navigate('/cart');
-  };
 
 
   if (loading) {

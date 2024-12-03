@@ -4,6 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import { useSearch } from '../contexts/SearchContext ';
 import { useFilter } from '../contexts/FilterContext';
 import { useEffect, useState } from 'react';
+import { IProduct } from '../types/product';
 
 const Product = () => {
     const {addCart} = useCart();
@@ -12,7 +13,7 @@ const Product = () => {
     const { filters } = useFilter();
 
   
-    const [filteredProducts, setFilteredProducts] = useState<typeof productsData>([])
+    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     
     useEffect(() => {
       const filteredProducts = productsData.filter((product) => {

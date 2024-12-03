@@ -1,12 +1,9 @@
 import React, { createContext, useState, useContext, useCallback, ReactNode } from 'react';
+import { ISearchContextProps } from '../types/search';
 
-interface SearchContextProps {
-  searchQuery: string;
-  updateSearchQuery: (query: string) => void;
-  clearSearchQuery: () => void;
-}
 
-const SearchContext = createContext<SearchContextProps | undefined>(undefined);
+
+const SearchContext = createContext<ISearchContextProps | undefined>(undefined);
 
 interface SearchProviderProps {
   children: ReactNode;
@@ -36,7 +33,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   );
 };
 
-export const useSearch = (): SearchContextProps => {
+export const useSearch = (): ISearchContextProps => {
   const context = useContext(SearchContext);
   if (!context) {
     throw new Error('useSearch must be used within a SearchProvider');

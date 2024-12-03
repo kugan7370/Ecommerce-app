@@ -1,8 +1,22 @@
-export interface ICartItem {
-    id: string;
-    name: string;
-    price: number;
+import { IProduct } from "./product";
+
+export interface ICartItem extends IProduct {
+    selectedSize?: string;
+    selectedColor?: string;
     quantity: number;
-    selectedSize: string;
-    selectedColor: string;
+ 
+
+  }
+
+ export interface ICartContextType {
+    cart: ICartItem[];
+    addCart: (item: ICartItem) => void;
+    updateQuantity: (id: string, quantity: number) => void;
+    removeFromCart: (id: string) => void;
+    shippingCost: number;
+    taxRate: number;
+    subtotal: number;
+    tax: number;
+    total: number;
+    
   }

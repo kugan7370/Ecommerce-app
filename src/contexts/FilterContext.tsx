@@ -1,32 +1,22 @@
 import React, { createContext, useState, useContext, useCallback, ReactNode } from 'react';
+import { IFilterContextProps, IFilters } from '../types/filter';
 
-interface Filters {
-  sortBy: string;
-  category: string;
-  priceRange: string;
-}
 
-interface FilterContextProps {
-  filters: Filters;
-  updateFilter: (filterType: keyof Filters, value: string) => void;
-  clearFilters: () => void;
-  applyFilters: () => Partial<Filters>;
-}
 
-const FilterContext = createContext<FilterContextProps | undefined>(undefined);
+const FilterContext = createContext<IFilterContextProps | undefined>(undefined);
 
 interface FilterProviderProps {
   children: ReactNode;
 }
 
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<IFilters>({
     sortBy: '',
     category: '',
     priceRange: ''
   });
 
-  const updateFilter = useCallback((filterType: keyof Filters, value: string) => {
+  const updateFilter = useCallback((filterType: keyof IFilters, value: string) => {
     setFilters(prev => ({
       ...prev,
       [filterType]: value
@@ -44,7 +34,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   const applyFilters = useCallback(() => {
     const activeFilters = Object.entries(filters)
       .filter(([_, value]) => value !== '')
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Partial<Filters>);
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as Partial<IFilters>);
     
     return activeFilters;
   }, [filters]);
@@ -63,7 +53,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   );
 };
 
-export const useFilter = (): FilterContextProps => {
+export const useFilter = (): IFilterContextProps => {
   const context = useContext(FilterContext);
   if (!context) {
     throw new Error('useFilter must be used within a FilterProvider');

@@ -1,24 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import {toast} from 'react-toastify';
-import { ICartItem } from '../types/cart';
+import { ICartContextType, ICartItem } from '../types/cart';
 
 
 
-interface CartContextType {
-  cart: ICartItem[];
-  addCart: (item: ICartItem) => void;
-  updateQuantity: (id: string, quantity: number) => void;
-  removeFromCart: (id: string) => void;
-  shippingCost: number;
-  taxRate: number;
-  subtotal: number;
-  tax: number;
-  total: number;
-  
-}
-
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<ICartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth();
@@ -90,7 +77,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const calculateTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cart.reduce((total, item) => total + Number(item.price) * Number(item.quantity), 0);
   };
 
   const shippingCost = cart.length > 0 ? 9.99 : 0;
@@ -99,7 +86,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const tax = subtotal * taxRate;
   const total = subtotal + tax + shippingCost;
 
-  const contextValue: CartContextType = {
+  const contextValue: ICartContextType = {
     cart,
     addCart,
     updateQuantity,
