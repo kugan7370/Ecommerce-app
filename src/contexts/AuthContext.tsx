@@ -1,13 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-
 interface User {
   id: string;
   name: string;
   email: string;
-  password: string; 
+  password: string;
 }
-
 
 interface AuthContextType {
   currentUser: User | null;
@@ -15,29 +13,25 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
-  users: User[]; 
+  users: User[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-
-
-  useEffect(() => {
+  const [users, setUsers] = useState<User[]>(() => {
     const storedUsers = localStorage.getItem('users');
+    return storedUsers ? JSON.parse(storedUsers) : [];
+  });
+
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const storedCurrentUser = localStorage.getItem('currentUser');
-
-    if (storedUsers) setUsers(JSON.parse(storedUsers));
-    if (storedCurrentUser) setCurrentUser(JSON.parse(storedCurrentUser));
-  }, []);
-
+    return storedCurrentUser ? JSON.parse(storedCurrentUser) : null;
+  });
 
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
-
 
   useEffect(() => {
     if (currentUser) {
@@ -47,46 +41,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [currentUser]);
 
-
   const login = async (email: string, password: string) => {
-    try {
-      const foundUser = users.find(
-        (user) => user.email === email && user.password === password
-      );
-
-      if (!foundUser) {
-        throw new Error('Invalid email or password');
-      }
-
-      setCurrentUser(foundUser);
-
-    } catch (error) {
-      console.error('Login failed', error);
-      throw error;
+    const foundUser = users.find(
+      (user) => user.email === email && user.password === password
+    );
+    if (!foundUser) {
+      throw new Error('Invalid email or password');
     }
+    setCurrentUser(foundUser);
   };
 
-
   const register = async (name: string, email: string, password: string) => {
-    try {
-      const existingUser = users.find((user) => user.email === email);
-      if (existingUser) {
-        throw new Error('User already exists');
-      }
-
-      const newUser: User = {
-        id: crypto.randomUUID(), 
-        name,
-        email,
-        password,
-      };
-
-      setUsers((prevUsers) => [...prevUsers, newUser]);
-    } catch (error) {
-      console.error('Registration failed', error);
-      throw error;
+    const existingUser = users.find((user) => user.email === email);
+    if (existingUser) {
+      throw new Error('User already exists');
     }
-    
+
+    const newUser: User = {
+      id: crypto.randomUUID(),
+      name,
+      email,
+      password,
+    };
+
+    setUsers((prevUsers) => [...prevUsers, newUser]);
   };
 
   const logout = () => {
@@ -111,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useAuth } from './AuthContext'; 
+import { useAuth } from './AuthContext';
 
 interface CartItem {
   id: string;
@@ -20,7 +20,6 @@ interface CartContextType {
   subtotal: number;
   tax: number;
   total: number;
-
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,29 +28,38 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { currentUser } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
 
-
+  // Load cart from localStorage on mount
   useEffect(() => {
     if (currentUser) {
-      const storedCart = localStorage.getItem(`cart_${currentUser.id}`);
-      if (storedCart) {
-        setCart(JSON.parse(storedCart));
-      } else {
-        setCart([]); 
+      try {
+        const storedCart = localStorage.getItem(`cart_${currentUser.id}`);
+        if (storedCart) {
+          setCart(JSON.parse(storedCart));
+        }
+      } catch (error) {
+        console.error('Error loading cart from localStorage:', error);
+        setCart([]);
       }
     }
   }, [currentUser]);
 
-
+  // Save cart to localStorage whenever it changes
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem(`cart_${currentUser.id}`, JSON.stringify(cart));
+      const saveCart = () => {
+        try {
+          localStorage.setItem(`cart_${currentUser.id}`, JSON.stringify(cart));
+        } catch (error) {
+          console.error('Error saving cart to localStorage:', error);
+        }
+      };
+
+      const timeout = setTimeout(saveCart, 300); // Debounce saving to avoid frequent writes
+      return () => clearTimeout(timeout);
     }
   }, [cart, currentUser]);
 
- 
   const addCart = (item: CartItem) => {
-    console.log('Adding item to cart:', item);
-    
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
@@ -65,7 +73,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-
   const updateQuantity = (id: string, quantity: number) => {
     setCart((prevCart) =>
       prevCart.map((cartItem) =>
@@ -74,23 +81,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
   };
 
- 
   const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((cartItem) => cartItem.id !== id));
   };
 
-
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-
 
   const shippingCost = cart.length > 0 ? 9.99 : 0;
   const taxRate = 0.08;
   const subtotal = calculateTotal();
   const tax = subtotal * taxRate;
   const total = subtotal + tax + shippingCost;
-
 
   const contextValue: CartContextType = {
     cart,
@@ -101,7 +104,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     taxRate,
     subtotal,
     tax,
-    total, 
+    total,
   };
 
   return (
