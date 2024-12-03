@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Star, ShoppingCart, CheckCircle, Heart } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import productsData from '../data/productData';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 const ProductDetails = () => {
+  const {isAuthenticated}=useAuth();
 
   const { id } = useParams();
 
   const {addCart} = useCart();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -160,7 +164,7 @@ const ProductDetails = () => {
             <button 
               className="flex-grow flex items-center justify-center bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
               // disabled={!selectedSize || !selectedColor}
-              onClick={() => addCart({...product, quantity, size: selectedSize, color: selectedColor})}
+              onClick={() => isAuthenticated ? addCart({...product, quantity, size: selectedSize, color: selectedColor}):navigate('/login') }
             >
               <ShoppingCart className="mr-2" />
               Add to Cart

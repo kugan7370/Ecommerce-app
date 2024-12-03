@@ -22,7 +22,7 @@ const Navbar = () => {
   const { filters, updateFilter, applyFilters } = useFilter();
 
 
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, currentUser } = useAuth();
   const { cart } = useCart();
   const navigation = useNavigate();
   const location = useLocation();
@@ -186,9 +186,9 @@ const Navbar = () => {
               className="ml-2 h-[38px] flex items-center text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md"
             >
               <div className="h-[38px] w-[38px] p-2 flex justify-center items-center shadow-md rounded-md">
-              <SlidersHorizontal size={20} className="mr-1 text-blue-500" />
+                <SlidersHorizontal size={20} className="mr-1 text-blue-500" />
               </div>
-             
+
             </button>
           </form>
 
@@ -296,6 +296,7 @@ const Navbar = () => {
           {/* Desktop Right Section */}
           {isAuthenticated ? (
             <div className="hidden md:flex items-center space-x-4">
+
               <div
                 onClick={() => {
                   logout();
@@ -303,8 +304,9 @@ const Navbar = () => {
                 }}
                 className="flex items-center cursor-pointer text-gray-800 hover:text-blue-600 transition duration-300"
               >
-                <User className="mr-2" size={20} />
-                Sign Out
+                <h1 className='uppercase mr-2 font-semibold'>
+                  {currentUser?.name}
+                </h1>
               </div>
               <NavLink
                 to="/checkout"
