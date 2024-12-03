@@ -1,8 +1,9 @@
 import { ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { IProductCardProps } from '../types/product';
 
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product, onAddToCart }:IProductCardProps) => {
 
   
     const navigate = useNavigate();

@@ -45,6 +45,12 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
 
 
+  const handleAddToCart = () => { 
+    addCart({...product, quantity, size: selectedSize, color: selectedColor});
+    navigate('/cart');
+  };
+
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">

@@ -42,11 +42,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [currentUser]);
 
   const login = async (email: string, password: string) => {
+
+    // check user available or  not
     const foundUser = users.find(
+      (user) => user.email === email
+    );
+
+    const verifyUser = users.find(
       (user) => user.email === email && user.password === password
     );
     if (!foundUser) {
-      throw new Error('Invalid email or password');
+      throw new Error('User not found');
+    }
+
+    if (!verifyUser) {
+      throw new Error('Invalid password');
     }
     setCurrentUser(foundUser);
   };
@@ -65,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setUsers((prevUsers) => [...prevUsers, newUser]);
+    localStorage.setItem(`cart_${newUser.id}`, JSON.stringify([]));
   };
 
   const logout = () => {

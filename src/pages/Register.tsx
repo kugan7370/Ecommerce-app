@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { NavLink } from 'react-router-dom';
-
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const RegisterPage = () => {
@@ -10,7 +10,7 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const navigate = useNavigate();
     const { register } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -18,14 +18,22 @@ const RegisterPage = () => {
         e.preventDefault();
         try {
             if (password !== confirmPassword) {
-                alert('Passwords do not match');
+                toast.error('Passwords do not match');
                 return;
             }
 
             await register(name, email, password);
+            navigate('/login');
+            toast.success('Registered successfully');
         } catch (error) {
             console.error('Error registering:', error);
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error('An unknown error occurred');
+            }
         };
+
     };
 
     return (

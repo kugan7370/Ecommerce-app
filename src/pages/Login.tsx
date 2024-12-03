@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { NavLink, useNavigate } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 
 
 const Login = () => {
@@ -18,10 +18,16 @@ const Login = () => {
         try {
            await login(email, password);
               navigation('/');
+              toast.success('Logged in successfully');
 
 
         } catch (error) {
             console.error('Error logging in:', error);
+            if (error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error('An unknown error occurred');
+            }
 
         }
     };

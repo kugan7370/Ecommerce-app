@@ -1,18 +1,13 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import {toast} from 'react-toastify';
+import { ICartItem } from '../types/cart';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  selectedSize: string;
-  selectedColor: string;
-}
+
 
 interface CartContextType {
-  cart: CartItem[];
-  addCart: (item: CartItem) => void;
+  cart: ICartItem[];
+  addCart: (item: ICartItem) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeFromCart: (id: string) => void;
   shippingCost: number;
@@ -20,30 +15,35 @@ interface CartContextType {
   subtotal: number;
   tax: number;
   total: number;
+  
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth();
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<ICartItem[]>([]);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
     if (currentUser) {
-      try {
-        const storedCart = localStorage.getItem(`cart_${currentUser.id}`);
-        if (storedCart) {
+      const storedCart = localStorage.getItem(`cart_${currentUser.id}`);
+      if (storedCart) {
+        try {
           setCart(JSON.parse(storedCart));
+        } catch (error) {
+          console.error('Error loading cart from localStorage:', error);
+          setCart([]);
         }
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
+      } else {
         setCart([]);
+        localStorage.setItem(`cart_${currentUser.id}`, JSON.stringify([]));
       }
+    } else {
+      setCart([]); 
     }
   }, [currentUser]);
 
-  // Save cart to localStorage whenever it changes
+  
   useEffect(() => {
     if (currentUser) {
       const saveCart = () => {
@@ -54,20 +54,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       };
 
-      const timeout = setTimeout(saveCart, 300); // Debounce saving to avoid frequent writes
+      const timeout = setTimeout(saveCart, 300); 
       return () => clearTimeout(timeout);
     }
   }, [cart, currentUser]);
 
-  const addCart = (item: CartItem) => {
+  const addCart = (item: ICartItem) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
-        return prevCart.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
-            : cartItem
-        );
+        // return prevCart.map((cartItem) =>
+        //   cartItem.id === item.id
+        //     ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
+        //     : cartItem
+        // );
+        toast.error('Product already in cart');
+        return prevCart;
       }
       return [...prevCart, item];
     });
@@ -80,6 +82,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       )
     );
   };
+
+
 
   const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((cartItem) => cartItem.id !== id));
@@ -105,6 +109,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     subtotal,
     tax,
     total,
+
   };
 
   return (
