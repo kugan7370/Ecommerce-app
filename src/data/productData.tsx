@@ -18,6 +18,7 @@ const productsData = [
         ],
         inStock: true,
         stockQuantity: 45,
+        category: 'Kitchen',
       },
     
     {
@@ -40,6 +41,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 25,
+      category: 'Electronics',
     },
     {
       id: 3,
@@ -63,6 +65,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 30,
+      category: 'Clothing',
     },
     {
       id: 4,
@@ -83,6 +86,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 10,
+      category: 'Electronics',
     },
     {
       id: 5,
@@ -103,6 +107,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 40,
+      category: 'Accessories',
     },
     {
       id: 6,
@@ -124,6 +129,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 50,
+      category: 'Accessories',
     },
     {
       id: 7,
@@ -145,6 +151,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 35,
+      category: 'Electronics',
     },
     {
       id: 8,
@@ -164,6 +171,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 20,
+      category: 'Electronics',
     },
     {
         id: 9,
@@ -185,27 +193,9 @@ const productsData = [
         ],
         inStock: true,
         stockQuantity: 15,
+        category: 'Clothing',
       },
-    {
-      id: 1,
-      name: 'Electric Kettle',
-      price: 39.99,
-      description: 'Fast-boiling electric kettle with temperature control and auto shut-off for safety.',
-      images: [
-        'https://m.media-amazon.com/images/I/71t7qvB4GYL.__AC_SX300_SY300_QL70_FMwebp_.jpg',
-        'https://m.media-amazon.com/images/I/61FPOWyvMOL._AC_SY879_.jpg',
-        'https://m.media-amazon.com/images/I/71uloi0z5KL._AC_SY879_.jpg',
-      ],
-      colors: [
-        { name: 'White', hex: '#FFFFFF' },
-        { name: 'Black', hex: '#000000' },
-      ],
-      reviews: [
-        { id: 1, name: 'Jordan R.', rating: 4, date: '3 days ago', comment: 'Very efficient and easy to use.' },
-      ],
-      inStock: true,
-      stockQuantity: 45,
-    },
+
     {
       id: 10,
       name: 'Noise-Cancelling Headphones',
@@ -226,6 +216,7 @@ const productsData = [
       ],
       inStock: true,
       stockQuantity: 25,
+      category: 'Electronics',
     },
 
   ]

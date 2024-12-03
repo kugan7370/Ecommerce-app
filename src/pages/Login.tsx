@@ -17,7 +17,7 @@ const Login = () => {
         e.preventDefault();
         try {
            await login(email, password);
-              navigation('/products');
+              navigation('/');
 
 
         } catch (error) {
